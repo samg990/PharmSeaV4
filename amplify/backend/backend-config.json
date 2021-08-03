@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "pharmseav4cab0b9fa": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}

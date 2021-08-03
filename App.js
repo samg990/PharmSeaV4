@@ -1,21 +1,144 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import "react-native-gesture-handler";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import { StatusBar } from "expo-status-bar";
+
+import React, { useState, useEffect } from "react";
+import { NativeBaseProvider, Box } from "native-base";
+import { ActivityIndicator, View } from "react-native";
+import Amplify, { Auth } from "aws-amplify";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import SignIn from "./src/screens/Auth/SignIn";
+import SignUp from "./src/screens/Auth/SignUp";
+import SignIn2 from "./src/screens/Auth/SignIn2";
+
+import ConfirmSignUp from "./src/screens/Auth/ConfirmSignUp";
+
+import TabNavigator from "./src/navigation/TabNavigator/index";
+
+import config from "./src/aws-exports.js";
+
+import Toast, { BaseToast } from "react-native-toast-message";
+
+Amplify.configure(config);
+
+const AuthenticationStack = createStackNavigator();
+
+const toastConfig = {
+	success: ({ text1, ...rest }) => (
+		<BaseToast
+			{...rest}
+			style={{
+				borderLeftColor: "#15B097",
+				backgroundColor: "#71F79F",
+				borderLeftWidth: 5,
+				margin: 50,
+				height: 80,
+			}}
+			contentContainerStyle={{
+				paddingHorizontal: 15,
+				justifyContent: "center",
+				alignItems: "center",
+			}}
+			text1Style={{
+				color: "#000814",
+				fontSize: 30,
+				fontWeight: "normal",
+			}}
+			text1={text1}
+			text2={null}
+		/>
+	),
+	error: ({ text1, ...rest }) => (
+		<BaseToast
+			{...rest}
+			style={{
+				borderLeftColor: "#F1FAEE",
+				backgroundColor: "#E63946",
+				borderLeftWidth: 5,
+				margin: 50,
+				height: 80,
+			}}
+			contentContainerStyle={{
+				paddingHorizontal: 15,
+				justifyContent: "center",
+				alignItems: "center",
+			}}
+			text1Style={{
+				color: "white",
+				fontSize: 20,
+				fontWeight: "normal",
+			}}
+			text1={text1}
+			text2={null}
+		/>
+	),
+};
+
+const AuthenticationNavigator = (props) => {
+	return (
+		<AuthenticationStack.Navigator headerMode="none">
+			<AuthenticationStack.Screen name="SignIn">
+				{(screenProps) => (
+					<SignIn {...screenProps} updateAuthState={props.updateAuthState} />
+				)}
+			</AuthenticationStack.Screen>
+
+			<AuthenticationStack.Screen name="SignUp" component={SignUp} />
+
+			<AuthenticationStack.Screen
+				name="ConfirmSignUp"
+				component={ConfirmSignUp}
+			/>
+		</AuthenticationStack.Navigator>
+	);
+};
+
+const Initializing = () => {
+	return (
+		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+			<ActivityIndicator size="large" color="tomato" />
+		</View>
+	);
+};
+
+function App() {
+	const [isUserLoggedIn, setUserLoggedIn] = useState("initializing");
+
+	useEffect(() => {
+		checkAuthState();
+	}, []);
+
+	async function checkAuthState() {
+		try {
+			await Auth.currentAuthenticatedUser();
+			console.log(" User is signed in");
+			setUserLoggedIn("loggedIn");
+		} catch (err) {
+			console.log(" User is not signed in");
+			setUserLoggedIn("loggedOut");
+		}
+	}
+
+	function updateAuthState(isUserLoggedIn) {
+		setUserLoggedIn(isUserLoggedIn);
+	}
+
+	return (
+		<>
+			<NavigationContainer>
+				{isUserLoggedIn === "initializing" && <Initializing />}
+				{isUserLoggedIn === "loggedIn" && (
+					<TabNavigator updateAuthState={updateAuthState} />
+				)}
+				{isUserLoggedIn === "loggedOut" && (
+					<AuthenticationNavigator updateAuthState={updateAuthState} />
+				)}
+				<Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
+			</NavigationContainer>
+		</>
+	);
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
