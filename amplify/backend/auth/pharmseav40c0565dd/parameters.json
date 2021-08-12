@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "pharmseav4cab0b9fa_identitypool_cab0b9fa",
+    "identityPoolName": "pharmseav40c0565dd_identitypool_0c0565dd",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "pharmscab0b9fa",
-    "userPoolName": "pharmseav4cab0b9fa_userpool_cab0b9fa",
+    "resourceNameTruncated": "pharms0c0565dd",
+    "userPoolName": "pharmseav40c0565dd_userpool_0c0565dd",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -18,6 +18,12 @@
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
+        "birthdate",
+        "email",
+        "name",
+        "phone_number"
+    ],
+    "aliasAttributes": [
         "email"
     ],
     "userpoolClientGenerateSecret": false,
@@ -28,10 +34,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "pharmscab0b9fa_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "pharms0c0565dd_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "cab0b9fa",
-    "resourceName": "pharmseav4cab0b9fa",
+    "sharedId": "0c0565dd",
+    "resourceName": "pharmseav40c0565dd",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -46,11 +52,14 @@
         ]
     },
     "useDefault": "default",
-    "usernameAttributes": [
-        "email"
-    ],
+    "triggers": "{}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
+    "parentStack": {
+        "Ref": "AWS::StackId"
+    },
+    "breakCircularDependency": true,
+    "permissions": [],
     "dependsOn": []
 }

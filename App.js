@@ -4,10 +4,11 @@ import { StatusBar } from "expo-status-bar";
 
 import React, { useState, useEffect } from "react";
 import { NativeBaseProvider, Box } from "native-base";
-import { ActivityIndicator, View } from "react-native";
+import { View } from "react-native";
 import Amplify, { Auth } from "aws-amplify";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { ActivityIndicator, Colors } from "react-native-paper";
 
 import SignIn from "./src/screens/Auth/SignIn";
 import SignUp from "./src/screens/Auth/SignUp";
@@ -26,6 +27,35 @@ Amplify.configure(config);
 const AuthenticationStack = createStackNavigator();
 
 const toastConfig = {
+	success2: ({ text1, text2, ...rest }) => (
+		<BaseToast
+			{...rest}
+			style={{
+				borderLeftColor: "#15B097",
+				backgroundColor: "#71F79F",
+				borderLeftWidth: 5,
+				margin: 50,
+				height: 80,
+			}}
+			contentContainerStyle={{
+				paddingHorizontal: 15,
+				justifyContent: "center",
+				alignItems: "center",
+			}}
+			text1Style={{
+				color: "#000814",
+				fontSize: 30,
+				fontWeight: "normal",
+			}}
+			text2Style={{
+				color: "#000814",
+				fontSize: 20,
+				fontWeight: "normal",
+			}}
+			text1={text1}
+			text2={text2}
+		/>
+	),
 	success: ({ text1, ...rest }) => (
 		<BaseToast
 			{...rest}
@@ -58,7 +88,7 @@ const toastConfig = {
 				backgroundColor: "#E63946",
 				borderLeftWidth: 5,
 				margin: 50,
-				height: 80,
+				height: 50,
 			}}
 			contentContainerStyle={{
 				paddingHorizontal: 15,
@@ -98,7 +128,7 @@ const AuthenticationNavigator = (props) => {
 const Initializing = () => {
 	return (
 		<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-			<ActivityIndicator size="large" color="tomato" />
+			<ActivityIndicator animating={true} color={Colors.red800} />
 		</View>
 	);
 };

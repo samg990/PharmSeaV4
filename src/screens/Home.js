@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { View, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
@@ -19,22 +19,28 @@ import {
 	HStack,
 	Center,
 	Pressable,
+	Container,
 } from "native-base";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 export default function Home() {
+	const [Name, setName] = useState("");
+
+	Auth.currentAuthenticatedUser({
+		bypassCache: false, // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
+	})
+
+		.then((user) => setName(user.attributes.email))
+
+		.catch((err) => console.log(err));
+
 	return (
 		<NativeBaseProvider>
-			<Box
-				flex={1}
-				p={2}
-				w="90%"
-				marginTop={20}
-				mx="auto"
-				alignItem="center"
-				justifyContent="center"
-			>
+			<Box flex={1} p={2} w="90%" marginTop={10} mx="auto" alignItem="center">
+				<Container>
+					<Text italic>Welcome {Name}</Text>
+				</Container>
 				<VStack space={2} alignItems="center" width="100%">
 					<Heading mt={3}>Truncated </Heading>
 					<Text isTruncated w="80%">
@@ -50,7 +56,7 @@ export default function Home() {
 					<Button
 						onPress={() =>
 							Toast.show({
-								type: "success",
+								type: "success2",
 								position: "bottom",
 								text1: "Success",
 								text2: "This is some something 👋",
@@ -60,6 +66,7 @@ export default function Home() {
 								bottomOffset: 40,
 							})
 						}
+						backgroundColor="#219EBC"
 					>
 						Success
 					</Button>

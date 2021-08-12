@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Icon from "react-native-vector-icons/AntDesign";
+import Icon from "react-native-vector-icons/Ionicons";
 
 import Home from "../../screens/Home";
 import SearchMeds from "../../screens/BottomTabScreens/SearchMeds";
@@ -18,13 +18,13 @@ const screenOptions = (route, color) => {
 			iconName = "home";
 			break;
 		case "SearchMeds":
-			iconName = "appstore-o";
+			iconName = "medkit";
 			break;
 		case "Profile":
-			iconName = "folder1";
+			iconName = "search";
 			break;
 		case "Settings":
-			iconName = "folder1";
+			iconName = "settings";
 			break;
 		default:
 			break;
@@ -43,8 +43,9 @@ const TabNavigator = ({ updateAuthState }) => {
 				activeTintColor: "black",
 				inactiveTintColor: "#d9d9d9",
 				style: {
-					borderTopColor: "#66666666",
-					backgroundColor: "transparent",
+					borderTopColor: "#FB8500",
+					borderTopWidth: 2,
+					backgroundColor: "white",
 					elevation: 0,
 				},
 			}}
