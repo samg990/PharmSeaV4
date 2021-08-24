@@ -31,26 +31,31 @@ const toastConfig = {
 		<BaseToast
 			{...rest}
 			style={{
-				borderLeftColor: "#15B097",
-				backgroundColor: "#71F79F",
+				borderLeftColor: "#FCA311",
+				backgroundColor: "#292929",
 				borderLeftWidth: 5,
 				margin: 50,
 				height: 80,
+				width: 250,
+				borderRadius: 40,
 			}}
 			contentContainerStyle={{
 				paddingHorizontal: 15,
 				justifyContent: "center",
 				alignItems: "center",
+				alignContent: "center",
 			}}
 			text1Style={{
-				color: "#000814",
-				fontSize: 30,
-				fontWeight: "normal",
-			}}
-			text2Style={{
-				color: "#000814",
+				color: "white",
 				fontSize: 20,
 				fontWeight: "normal",
+				textAlign: "auto",
+			}}
+			text2Style={{
+				color: "white",
+				fontSize: 15,
+				fontWeight: "normal",
+				textAlign: "center",
 			}}
 			text1={text1}
 			text2={text2}
@@ -60,11 +65,13 @@ const toastConfig = {
 		<BaseToast
 			{...rest}
 			style={{
-				borderLeftColor: "#15B097",
-				backgroundColor: "#71F79F",
+				borderLeftColor: "#FCA311",
+				backgroundColor: "#292929",
 				borderLeftWidth: 5,
 				margin: 50,
 				height: 80,
+				width: 200,
+				borderRadius: 40,
 			}}
 			contentContainerStyle={{
 				paddingHorizontal: 15,
@@ -72,8 +79,8 @@ const toastConfig = {
 				alignItems: "center",
 			}}
 			text1Style={{
-				color: "#000814",
-				fontSize: 30,
+				color: "white",
+				fontSize: 20,
 				fontWeight: "normal",
 			}}
 			text1={text1}
@@ -84,11 +91,13 @@ const toastConfig = {
 		<BaseToast
 			{...rest}
 			style={{
-				borderLeftColor: "#F1FAEE",
-				backgroundColor: "#E63946",
+				borderLeftColor: "#FCA311",
+				backgroundColor: "#292929",
 				borderLeftWidth: 5,
 				margin: 50,
-				height: 50,
+				height: 80,
+				width: 350,
+				borderRadius: 40,
 			}}
 			contentContainerStyle={{
 				paddingHorizontal: 15,
@@ -97,7 +106,7 @@ const toastConfig = {
 			}}
 			text1Style={{
 				color: "white",
-				fontSize: 20,
+				fontSize: 18,
 				fontWeight: "normal",
 			}}
 			text1={text1}
