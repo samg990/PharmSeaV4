@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import { NativeBaseProvider, Box } from "native-base";
 import { View } from "react-native";
 import Amplify, { Auth } from "aws-amplify";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ActivityIndicator, Colors } from "react-native-paper";
@@ -166,16 +167,18 @@ function App() {
 
 	return (
 		<>
-			<NavigationContainer>
-				{isUserLoggedIn === "initializing" && <Initializing />}
-				{isUserLoggedIn === "loggedIn" && (
-					<TabNavigator updateAuthState={updateAuthState} />
-				)}
-				{isUserLoggedIn === "loggedOut" && (
-					<AuthenticationNavigator updateAuthState={updateAuthState} />
-				)}
-				<Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
-			</NavigationContainer>
+			<NativeBaseProvider>
+				<NavigationContainer>
+					{isUserLoggedIn === "initializing" && <Initializing />}
+					{isUserLoggedIn === "loggedIn" && (
+						<TabNavigator updateAuthState={updateAuthState} />
+					)}
+					{isUserLoggedIn === "loggedOut" && (
+						<AuthenticationNavigator updateAuthState={updateAuthState} />
+					)}
+					<Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
+				</NavigationContainer>
+			</NativeBaseProvider>
 		</>
 	);
 }
