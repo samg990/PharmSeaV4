@@ -1,11 +1,19 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet, RefreshControl } from "react-native";
-
+import {
+	View,
+	Text,
+	FlatList,
+	StyleSheet,
+	RefreshControl,
+	Image,
+} from "react-native";
+import { VStack, HStack, Stack } from "native-base";
+import { AppleStyle } from "react-native-scrollable-navigation-bar";
 import MedsCard from "./MedsCard";
 
 const MedsList = ({ medsList, refreshing, onRefresh }) => {
 	return (
-		<View style={styles.medsView}>
+		<View>
 			{medsList && (
 				<FlatList
 					style={styles.medsList}
@@ -21,7 +29,7 @@ const MedsList = ({ medsList, refreshing, onRefresh }) => {
 								medBrand={item.brandName}
 								medGeneric={item.genericName}
 								medDose={item.dose}
-								medOwner={item.userName}
+								medOwner={item.owner}
 							/>
 						);
 					}}
@@ -33,7 +41,7 @@ const MedsList = ({ medsList, refreshing, onRefresh }) => {
 
 const styles = StyleSheet.create({
 	itemText: {
-		fontSize: 15,
+		fontSize: 10,
 	},
 	productText: {
 		fontSize: 20,
@@ -41,16 +49,17 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 	},
 	medsView: {
-		padding: 0,
-		margin: 0,
+		padding: 10,
+		margin: 10,
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
 		alignItems: "center",
 	},
 	medsList: {
-		padding: 5,
-		marginBottom: 20,
+		padding: 10,
+		marginBottom: 10,
+		marginTop: 10,
 	},
 });
 export default MedsList;

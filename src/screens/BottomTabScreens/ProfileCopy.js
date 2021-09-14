@@ -2,12 +2,52 @@ import React, { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { Searchbar, TextInput, Button } from "react-native-paper";
 
+return (
+	<>
+		<SafeAreaView>
+			{medsList && (
+				<MedsList
+					medsList={medsList}
+					refreshing={refreshing}
+					onRefresh={onRefresh}
+				/>
+			)}
+		</SafeAreaView>
+	</>
+);
+
+return (
+	<Card containerStyle={styles.cardContainer}>
+		<Card.Title style={styles.cardTitle}>{medBrand}</Card.Title>
+		<Card.Divider />
+
+		<Text style={styles.medDose}>Generic Name:</Text>
+		<Text style={styles.medDoseinner}>{medGeneric}</Text>
+
+		<Text style={styles.medDose}>Dose:</Text>
+		<Text style={styles.medDoseinner}>{medDose}</Text>
+		<View style={styles.ownerTitle}>
+			<Icon name="person-pin" />
+		</View>
+	</Card>
+	
+);
+
 const Profile = () => {
 	const [isLoading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
 	const [input, setInput] = useState("");
 	const [searchTimer, setSearchTimer] = useState(null);
 	console.log(data);
+
+
+	input: {
+		name: user.name,
+		brandName: medsingle.brand_name,
+		genericName: medsingle.generic_name,
+		dose: medsingle.active_ingredients[0].strength,
+		userId: user.attributes.sub,
+	},
 
 	async function fetchData(text) {
 		await fetch(

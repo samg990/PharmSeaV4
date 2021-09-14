@@ -41,6 +41,8 @@
     "react-native-reanimated": "~2.2.0",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
+    "react-native-scrollable-navigation-bar": "^3.0.5",
+    "react-native-sticky-parallax-header": "^0.4.1",
     "react-native-svg": "12.1.1",
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-tab-view": "^3.0.1",

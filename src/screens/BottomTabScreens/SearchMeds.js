@@ -1,9 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { API } from "aws-amplify";
-import { SafeAreaView, StatusBar, TouchableOpacity } from "react-native";
+import {
+	SafeAreaView,
+	View,
+	TouchableOpacity,
+	Image,
+	StatusBar,
+	StyleSheet,
+	RefreshControl,
+} from "react-native";
+import { IconButton, Icon, Center, NativeBaseProvider } from "native-base";
+import { AntDesign } from "@expo/vector-icons";
 
-import { listProducts } from "../../graphql/queries";
+import { listMedications } from "../../graphql/queries";
 import MedsList from "../../components/MedsList";
+import { Appbar } from "react-native-paper";
+import AppBarBase from "../../components/AppBar";
+
+const wait = (timeout) => {
+	return new Promise((resolve) => setTimeout(resolve, timeout));
+};
+
 const HomeScreen = (props) => {
 	const [medsList, setMeds] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
@@ -11,10 +28,10 @@ const HomeScreen = (props) => {
 	const fetchMedications = async () => {
 		try {
 			const meds = await API.graphql({ query: listMedications });
-			if (Medications.data.listMedications) {
+			if (meds.data.listMedications) {
 				console.log("Medication: \n");
-				console.log(MedicationLists);
-				setProducts(medications.data.listMedications.items);
+				console.log(meds);
+				setMeds(meds.data.listMedications.items);
 			}
 		} catch (e) {
 			console.log(e.message);
@@ -29,10 +46,12 @@ const HomeScreen = (props) => {
 		await fetchMedications();
 		setRefreshing(false);
 	};
+
 	return (
 		<>
-			<StatusBar barStyle="dark-content" />
 			<SafeAreaView>
+				<AppBarBase Title={"My Medications"} />
+
 				{medsList && (
 					<MedsList
 						medsList={medsList}
@@ -44,5 +63,11 @@ const HomeScreen = (props) => {
 		</>
 	);
 };
+
+const styles = StyleSheet.create({
+	AppHeader: {
+		backgroundColor: "#669bbc",
+	},
+});
 
 export default HomeScreen;

@@ -67,11 +67,11 @@ const toastConfig = {
 			{...rest}
 			style={{
 				borderLeftColor: "#FCA311",
-				backgroundColor: "#292929",
+				backgroundColor: "#0ead69",
 				borderLeftWidth: 5,
 				margin: 50,
 				height: 80,
-				width: 200,
+				width: 300,
 				borderRadius: 40,
 			}}
 			contentContainerStyle={{
@@ -81,7 +81,33 @@ const toastConfig = {
 			}}
 			text1Style={{
 				color: "white",
-				fontSize: 20,
+				fontSize: 18,
+				fontWeight: "normal",
+			}}
+			text1={text1}
+			text2={null}
+		/>
+	),
+	success3: ({ text1, ...rest }) => (
+		<BaseToast
+			{...rest}
+			style={{
+				borderLeftColor: "#FCA311",
+				backgroundColor: "#0ead69",
+				borderLeftWidth: 5,
+				margin: 50,
+				height: 80,
+				width: 300,
+				borderRadius: 40,
+			}}
+			contentContainerStyle={{
+				paddingHorizontal: 15,
+				justifyContent: "center",
+				alignItems: "center",
+			}}
+			text1Style={{
+				color: "white",
+				fontSize: 13,
 				fontWeight: "normal",
 			}}
 			text1={text1}

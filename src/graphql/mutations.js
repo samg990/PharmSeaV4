@@ -13,6 +13,7 @@ export const createMedication = /* GraphQL */ `
       genericName
       dose
       userId
+      userName
       createdAt
       updatedAt
       owner
@@ -31,6 +32,7 @@ export const updateMedication = /* GraphQL */ `
       genericName
       dose
       userId
+      userName
       createdAt
       updatedAt
       owner
@@ -49,6 +51,7 @@ export const deleteMedication = /* GraphQL */ `
       genericName
       dose
       userId
+      userName
       createdAt
       updatedAt
       owner

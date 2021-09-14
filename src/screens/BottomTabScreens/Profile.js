@@ -11,7 +11,6 @@ import {
 import {
 	Searchbar,
 	TextInput,
-	Button,
 	Modal,
 	Portal,
 	Provider,
@@ -19,9 +18,16 @@ import {
 	IconButton,
 	Colors,
 } from "react-native-paper";
+import { Button, Popover, Center, NativeBaseProvider } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Toast from "react-native-toast-message";
-import { Auth, API, graphqlOperation} from 'aws-amplify';
+import { Auth, API, graphqlOperation } from "aws-amplify";
+import { createMedication } from "../../graphql/mutations";
+
+import BannerH from "../../components/Banner";
+import AppBarBase from "../../components/AppBar";
+import * as Animatable from "react-native-animatable";
+import PopMenu from "../../components/MenuPop";
 
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
 	<TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
@@ -40,13 +46,34 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
 				Dosage Form: {item.dosage_form}
 			</Text>
 		</View>
-		<Button
-			color={"white"}
-			style={styles.addbutton}
-			onPress={() => handleSubmit()}
+		<Popover
+			trigger={(triggerProps) => {
+				return (
+					<Button style={styles.AddMeds} size="xs" {...triggerProps}>
+						Add To My Meds
+					</Button>
+				);
+			}}
 		>
-			Add To MyMeds
-		</Button>
+			<Popover.Content accessibilityLabel="add to my meds" borderRadius={"xl"}>
+				<Popover.Arrow />
+				<Popover.CloseButton />
+				<Popover.Header>Add to My Medications</Popover.Header>
+				<Popover.Body>
+					Are you sure you want to add this to 'My Medications'
+				</Popover.Body>
+				<Popover.Footer justifyContent="flex-end">
+					<Button.Group>
+						<Button size="sm" variant="ghost">
+							Cancel
+						</Button>
+						<Button size="sm" onPress={onPress}>
+							Yes
+						</Button>
+					</Button.Group>
+				</Popover.Footer>
+			</Popover.Content>
+		</Popover>
 	</TouchableOpacity>
 );
 
@@ -69,13 +96,34 @@ const Item3 = ({ item, onPress, backgroundColor, textColor }) => (
 				Dosage Form: {item.dosage_form}
 			</Text>
 		</View>
-		<Button
-			color={"white"}
-			style={styles.addbutton}
-			onPress={() => handleSubmit()}
+		<Popover
+			trigger={(triggerProps) => {
+				return (
+					<Button style={styles.AddMeds} size="xs" {...triggerProps}>
+						Add To My Meds
+					</Button>
+				);
+			}}
 		>
-			Add To MyMeds
-		</Button>
+			<Popover.Content accessibilityLabel="add to my meds" borderRadius={"xl"}>
+				<Popover.Arrow />
+				<Popover.CloseButton />
+				<Popover.Header>Add to My Medications</Popover.Header>
+				<Popover.Body>
+					Are you sure you want to add this to 'My Medications'
+				</Popover.Body>
+				<Popover.Footer justifyContent="flex-end">
+					<Button.Group>
+						<Button size="sm" variant="ghost">
+							Cancel
+						</Button>
+						<Button size="sm" onPress={onPress}>
+							Yes
+						</Button>
+					</Button.Group>
+				</Popover.Footer>
+			</Popover.Content>
+		</Popover>
 	</TouchableOpacity>
 );
 
@@ -99,13 +147,34 @@ const Item4 = ({ item, onPress, backgroundColor, textColor }) => (
 				Dosage Form: {item.dosage_form}
 			</Text>
 		</View>
-		<Button
-			color={"white"}
-			style={styles.addbutton}
-			onPress={() => handleSubmit()}
+		<Popover
+			trigger={(triggerProps) => {
+				return (
+					<Button style={styles.AddMeds} size="xs" {...triggerProps}>
+						Add To My Meds
+					</Button>
+				);
+			}}
 		>
-			Add To MyMeds
-		</Button>
+			<Popover.Content accessibilityLabel="add to my meds" borderRadius={"xl"}>
+				<Popover.Arrow />
+				<Popover.CloseButton />
+				<Popover.Header>Add to My Medications</Popover.Header>
+				<Popover.Body>
+					Are you sure you want to add this to 'My Medications'
+				</Popover.Body>
+				<Popover.Footer justifyContent="flex-end">
+					<Button.Group>
+						<Button size="sm" variant="ghost">
+							Cancel
+						</Button>
+						<Button size="sm" onPress={onPress}>
+							Yes
+						</Button>
+					</Button.Group>
+				</Popover.Footer>
+			</Popover.Content>
+		</Popover>
 	</TouchableOpacity>
 );
 
@@ -124,33 +193,73 @@ const Profile = () => {
 	const [datausage, setDatausage] = useState([]);
 	const [input, setInput] = useState("");
 	const [selectedId, setSelectedId] = useState(null);
-
-	const handleSubmit = async () => {
-		// Saving medication details
-		try {
-			const user = await Auth.currentAuthenticatedUser();
-			const response = await API.graphql(
-				graphqlOperation(createProduct, {
-					input: {
-						name: user.name,
-						brandName: data.brand_name,
-						genericName: data.active_ingredients[0].name,
-						dose: active_ingredients[0].strength,
-						userId: user.attributes.sub,
-						userName: user.username,
-					},
-				}),
-			);
-			console.log("Response :\n");
-			console.log(response);
-		} catch (e) {
-			console.log(e.message);
-		}
-	};
+	const [medsingle, setMedsingle] = useState([]);
 
 	const renderItem = ({ item }) => {
+		const checkGeneric = () => {
+			if (item.active_ingredients[1] == null) {
+				return item.active_ingredients[0].name;
+			} else if (item.active_ingredients[2] == null) {
+				return (
+					item.active_ingredients[0].name +
+					" / " +
+					item.active_ingredients[1].name
+				);
+			} else {
+				return (
+					item.active_ingredients[0].name +
+					" / " +
+					item.active_ingredients[1].name +
+					" / " +
+					item.active_ingredients[2].name
+				);
+			}
+		};
+
+		const checkDose = () => {
+			if (item.active_ingredients[1] == null) {
+				return item.active_ingredients[0].strength;
+			} else if (item.active_ingredients[2] == null) {
+				return (
+					item.active_ingredients[0].strength +
+					"  " +
+					item.active_ingredients[1].strength
+				);
+			} else {
+				return (
+					item.active_ingredients[0].strength +
+					"  " +
+					item.active_ingredients[1].strength +
+					"  " +
+					item.active_ingredients[2].strength
+				);
+			}
+		};
+
+		const newMedication = async () => {
+			// Saving medication details
+			try {
+				const user = await Auth.currentAuthenticatedUser();
+				const response = await API.graphql(
+					graphqlOperation(createMedication, {
+						input: {
+							name: user.attributes.name,
+							brandName: item.brand_name,
+							genericName: checkGeneric(),
+							dose: checkDose(),
+							userId: user.attributes.sub,
+						},
+					}),
+				);
+				console.log("submitted");
+				console.log(response);
+			} catch (e) {
+				console.log(e.message);
+			}
+		};
+
 		const backgroundColor =
-			item.product_id === selectedId ? "#E5E5E5" : "#FCA311";
+			item.product_id === selectedId ? "#43aa8b" : "#c6def1";
 		const color = item.product_id === selectedId ? "black" : "black";
 
 		if (item.active_ingredients[1] == null) {
@@ -158,9 +267,19 @@ const Profile = () => {
 				<Item
 					item={item}
 					onPress={() => {
-						setSelectedId(item.product_id);
+						setMedsingle(item);
+						newMedication();
+
+						Toast.show({
+							type: "success3",
+							position: "bottom",
+							text1: "Successfully Added Medication",
+							visibilityTime: 3000,
+							autoHide: true,
+							topOffset: 30,
+							bottomOffset: 40,
+						});
 					}}
-					onLongPress={() => console.log("pressed")}
 					backgroundColor={{ backgroundColor }}
 					textColor={{ color }}
 				/>
@@ -170,9 +289,19 @@ const Profile = () => {
 				<Item3
 					item={item}
 					onPress={() => {
-						setSelectedId(item.product_id);
+						setMedsingle(item);
+						newMedication();
+
+						Toast.show({
+							type: "success3",
+							position: "bottom",
+							text1: "Successfully Added Medication",
+							visibilityTime: 3000,
+							autoHide: true,
+							topOffset: 30,
+							bottomOffset: 40,
+						});
 					}}
-					onLongPress={() => console.log("pressed")}
 					backgroundColor={{ backgroundColor }}
 					textColor={{ color }}
 				/>
@@ -182,9 +311,19 @@ const Profile = () => {
 				<Item4
 					item={item}
 					onPress={() => {
-						setSelectedId(item.product_id);
+						setMedsingle(item);
+						newMedication();
+
+						Toast.show({
+							type: "success3",
+							position: "bottom",
+							text1: "Successfully Added Medication",
+							visibilityTime: 3000,
+							autoHide: true,
+							topOffset: 30,
+							bottomOffset: 40,
+						});
 					}}
-					onLongPress={() => console.log("pressed")}
 					backgroundColor={{ backgroundColor }}
 					textColor={{ color }}
 				/>
@@ -207,12 +346,10 @@ const Profile = () => {
 				.finally(() => setMoreInfo(true));
 		}
 	}
+
 	function LoadLess() {
 		setMoreInfo(false);
 	}
-
-	console.log(data);
-	console.log(datausage);
 
 	async function fetchData(text) {
 		await fetch(
@@ -226,28 +363,33 @@ const Profile = () => {
 	}
 
 	return (
-		<View style={{ flex: 1, padding: 20, marginTop: 30 }}>
-			<Text
-				style={{
-					fontSize: 30,
-					color: "black",
-					textAlign: "center",
-					marginBottom: 5,
-				}}
-			>
-				Search Medications
-			</Text>
+		<View style={{ flex: 1 }}>
+			<AppBarBase Title={"Medication Search"} />
+			<BannerH
+				BannerMessage={
+					"-Please Search Medications by BRAND Names\n-Click on Specific Dose to add to My Medications\n-To Read More on the Medication Click More Info"
+				}
+			/>
+
 			<TextInput
 				ref={(input) => {
 					textInput = input;
 				}}
 				style={styles.mText}
 				theme={{ colors: { primary: "black", underlineColor: "transparent" } }}
-				label="Brand Name Search"
+				label="Brand Name"
 				value={input}
-				onChangeText={(text) => setInput(text)}
+				onChangeText={(text) => {
+					if (text === "Tylenol") {
+						setInput("Acetaminophen");
+					} else {
+						setInput(text);
+					}
+				}}
 				returnKeyType="search"
-				onSubmitEditing={() => fetchData(input)}
+				onSubmitEditing={() => {
+					fetchData(input);
+				}}
 				right={
 					<TextInput.Icon
 						name="close-thick"
@@ -265,6 +407,7 @@ const Profile = () => {
 					style={{
 						flex: 1,
 						padding: 20,
+						marginTop: 300,
 						alignContent: "center",
 						alignItems: "center",
 						justifyContent: "center",
@@ -275,7 +418,7 @@ const Profile = () => {
 					</Text>
 					<Image
 						style={styles.dopeimage}
-						source={require("../../../assets/dopamine_load.png")}
+						source={require("../../../assets/Carbamazepine.svg.png")}
 					/>
 				</View>
 			) : (
@@ -286,37 +429,35 @@ const Profile = () => {
 						justifyContent: "space-between",
 					}}
 				>
-					<Text
-						style={{
-							fontSize: 18,
-							color: "teal",
-							textAlign: "center",
-							marginBottom: 0,
-						}}
-					>
-						{input}
-					</Text>
-
 					{isMoreInfo ? (
-						<View style={styles.container}>
+						<Animatable.View animation="fadeIn" style={styles.container}>
 							<FlatList
 								data={datausage.results}
 								keyExtractor={({ set_id }, index) => set_id}
 								renderItem={renderItem2}
 								extraData={selectedId}
 							/>
-							<Button onPress={LoadLess}>Done</Button>
-						</View>
+							<Button onPress={LoadLess} color={"black"} colorScheme="teal">
+								Done
+							</Button>
+						</Animatable.View>
 					) : (
-						<View style={styles.container}>
-							<Button onPress={loadMore}>More Info</Button>
+						<Animatable.View animation="pulse" style={styles.container}>
+							<Button
+								style={styles.MoreInfo}
+								onPress={loadMore}
+								size="md"
+								colorScheme="teal"
+							>
+								More Info
+							</Button>
 							<FlatList
 								data={data.results}
 								keyExtractor={({ product_id }, index) => product_id}
 								renderItem={renderItem}
 								extraData={selectedId}
 							/>
-						</View>
+						</Animatable.View>
 					)}
 				</View>
 			)}
@@ -330,6 +471,25 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		marginTop: StatusBar.currentHeight || 0,
+	},
+	AppHeader: {
+		backgroundColor: "#669bbc",
+	},
+	MoreInfo: {
+		marginTop: 0,
+		marginBottom: 1,
+		width: "50%",
+		alignContent: "center",
+		justifyContent: "center",
+		alignSelf: "center",
+	},
+	AddMeds: {
+		marginTop: 0,
+		marginBottom: 1,
+		width: "50%",
+		alignContent: "center",
+		justifyContent: "center",
+		alignSelf: "center",
 	},
 	item: {
 		padding: 15,
@@ -360,14 +520,15 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 	mText: {
+		marginTop: 0,
+		marginBottom: 0,
 		backgroundColor: "#fff",
-		borderColor: "#000",
-		borderStyle: "solid",
+
 		borderWidth: 1,
 	},
 	dopeimage: {
-		width: 350,
-		height: 200,
+		width: 400,
+		height: 300,
 		resizeMode: "contain",
 	},
 });

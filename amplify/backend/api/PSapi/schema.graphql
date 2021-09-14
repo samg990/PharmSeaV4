@@ -1,10 +1,9 @@
-type Medication
-	@model(subscriptions: null)
-	@auth(rules: [{ allow: owner }, { allow: private, operations: [read] }]) {
+type Medication @model(subscriptions: null) @auth(rules: [{ allow: owner }]) {
 	id: ID!
 	name: String!
 	brandName: String!
 	genericName: String!
 	dose: String
 	userId: String
+	userName: String
 }

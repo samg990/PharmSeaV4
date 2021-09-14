@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
 
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import Toast from "react-native-toast-message";
 
 import { Auth } from "aws-amplify";
+import {
+	Container,
+	NavigationBar,
+	HeaderTitle,
+	StatusBar,
+	Border,
+} from "react-native-scrollable-navigation-bar";
 
 import {
 	NativeBaseProvider,
@@ -19,12 +26,11 @@ import {
 	HStack,
 	Center,
 	Pressable,
-	Container,
 } from "native-base";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
-export default function Home() {
+export default function Home(props) {
 	const [Name, setName] = useState("");
 
 	Auth.currentAuthenticatedUser({
@@ -35,53 +41,69 @@ export default function Home() {
 
 		.catch((err) => console.log(err));
 
+	function Placeholder(props) {
+		return (
+			<View style={{ height: 200, margin: 50, backgroundColor: "grey" }} />
+		);
+	}
+
+	function NavigationBarComponent(props) {
+		return (
+			<NavigationBar
+				title={"Hello World"}
+				titleStyle={{ color: "black" }}
+				backgroundColor={"#f5f5f5"}
+				{...props}
+			/>
+		);
+	}
+
+	function HeaderNavigationBarComponent(props) {
+		return <NavigationBar backgroundColor={"#f5f5f5"} {...props} />;
+	}
+
+	function HeaderForegroundComponent(props) {
+		return (
+			<HeaderTitle
+				title={"Hello " + Name}
+				titleStyle={{ color: "black" }}
+				{...props}
+			/>
+		);
+	}
+
+	function HeaderBackgroundComponent(props) {
+		return <View style={{ height: 300, backgroundColor: "#f5f5f5" }} />;
+	}
+
+	function BorderComponent(props) {
+		return <Border backgroundColor={"lightgrey"} height={1} />;
+	}
+
+	function HeaderBorderComponent(props) {
+		return <Border backgroundColor={"lightgrey"} height={1} />;
+	}
+
 	return (
-		<NativeBaseProvider>
-			<Box flex={1} p={2} w="90%" marginTop={10} mx="auto" alignItem="center">
-				<Container>
-					<Text italic>Welcome {Name}</Text>
-				</Container>
-				<VStack space={2} alignItems="center" width="100%">
-					<Heading mt={3}>Truncated </Heading>
-					<Text isTruncated w="80%">
-						Lorem ipsum is placeholder text commonly used in the graphic, print,
-						and publishing industries for previewing layouts and visual mockups.
-					</Text>
-					<Heading mt={3}>With Two lines </Heading>
-					<Text noOfLines={2}>
-						"The quick brown fox jumps over the lazy dog" is an English-language
-						pangram—a sentence that contains all of the letters of the English
-						alphabet. Owing to its existence, Chakra was created.
-					</Text>
-					<Button
-						onPress={() =>
-							Toast.show({
-								type: "success2",
-								position: "bottom",
-								text1: "Success",
-								text2: "This is some something 👋",
-								visibilityTime: 3000,
-								autoHide: true,
-								topOffset: 30,
-								bottomOffset: 40,
-							})
-						}
-						backgroundColor="#219EBC"
-					>
-						Success
-					</Button>
-				</VStack>
-			</Box>
-		</NativeBaseProvider>
+		<View style={{ height: "100%", width: "100%", margin: "auto" }}>
+			<Container
+				headerHeight={300}
+				HeaderForegroundComponent={HeaderForegroundComponent}
+				HeaderBackgroundComponent={HeaderBackgroundComponent}
+				HeaderNavigationBarComponent={HeaderNavigationBarComponent}
+				NavigationBarComponent={NavigationBarComponent}
+				contentContainerStyle={{ backgroundColor: "white" }}
+				borderHeight={1}
+				BorderComponent={BorderComponent}
+				HeaderBorderComponent={HeaderBorderComponent}
+			>
+				<Placeholder />
+				<Placeholder />
+				<Placeholder />
+				<Placeholder />
+			</Container>
+		</View>
 	);
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-
-		alignItems: "center",
-
-		marginTop: 20,
-	},
-});
+const styles = StyleSheet.create({});
